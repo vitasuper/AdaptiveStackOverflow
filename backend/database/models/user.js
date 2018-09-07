@@ -25,8 +25,10 @@ UserSchema.methods = {
 };
 
 /*
-  Define hooks for pre-saving 
-  (pre processing before saving to database)
+  Define hooks for pre-saving (pre processing before saving to database)
+  Before mongoose saves a document in the database, we want to hash the password, 
+  using the hashPassword method defined just above this in UserSchema.methods. 
+  This is serial middleware, so the next() function is needed to move on to the next middleware method.
 */
 UserSchema.pre('save', (next) => {
   if (!this.password) {
