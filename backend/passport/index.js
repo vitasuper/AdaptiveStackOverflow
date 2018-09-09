@@ -47,7 +47,7 @@ const localStrategy = new LocalStrategy(
   {
     usernameField: 'username' // option, default
   },
-  (username, password, done) => { // verify function
+  (username, password, done) => { // verify if username and password are valid
     User.findOne(
       { username: username }, // condition
       (err, user) => { // callback
@@ -61,7 +61,7 @@ const localStrategy = new LocalStrategy(
           return done(null, false, { message: 'Incorrect password' });
         }
 
-        // success
+        // verify success, pass the whole user object back
         return done(null, user);
     });
   }

@@ -46,7 +46,7 @@ app.use(
   2. deserializeUser will check to see if this user is saved in the database, and if it is found it assigns it to the request as req.user = {user object}.
 */
 app.use(passport.initialize());
-app.use(passport.session());
+app.use(passport.session()); // calls serializeUser and deserializeUser
 
 
 // Routing
