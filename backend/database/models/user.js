@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
-const bcypt = require('bcryptjs');
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+const bcrypt = require('bcryptjs');
 mongoose.promise = Promise
 
 /*
@@ -13,16 +13,16 @@ const UserSchema = new Schema({
 
 /*
   Define schema methods
-  `bcypt` is used for compare the password and hashing the password
+  `bcrypt` is used for compare the password and hashing the password
 */
 UserSchema.methods = {
-  checkPassword: (inputPassword) => {
-    return bcypt.compareSync(inputPassword, this.password);
-  },
-  hashPassword: (plainTextPassword) => {
-    return bcypt.hashSync(plainTextPassword, 10);
+	checkPassword: function(inputPassword) {  // NOTE: Should be `function (inputPassword)` instead of `(inputPassword) => `. Still don't know why ...
+		return bcrypt.compareSync(inputPassword, this.password)
+	},
+  hashPassword: function(plainTextPassword) {
+    return bcrypt.hashSync(plainTextPassword, 10);
   }
-};
+}
 
 /*
   Define hooks for pre-saving (pre processing before saving to database)
