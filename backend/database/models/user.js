@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 mongoose.promise = Promise
 
 /*
@@ -16,13 +16,13 @@ const UserSchema = new Schema({
   `bcrypt` is used for compare the password and hashing the password
 */
 UserSchema.methods = {
-	checkPassword: function(inputPassword) {  // NOTE: Should be `function (inputPassword)` instead of `(inputPassword) => `. Still don't know why ...
-		return bcrypt.compareSync(inputPassword, this.password)
+	checkPassword: function(inputPassword) {  // NOTE: do not pass arrow function since you need to use `this`: https://stackoverflow.com/questions/37365038/this-is-undefined-in-a-mongoose-pre-save-hook
+		return bcrypt.compareSync(inputPassword, this.password);
 	},
   hashPassword: function(plainTextPassword) {
     return bcrypt.hashSync(plainTextPassword, 10);
   }
-}
+};
 
 /*
   Define hooks for pre-saving (pre processing before saving to database)
@@ -30,7 +30,7 @@ UserSchema.methods = {
   using the hashPassword method defined just above this in UserSchema.methods. 
   This is serial middleware, so the next() function is needed to move on to the next middleware method.
 */
-UserSchema.pre('save', (next) => {
+UserSchema.pre('save', function(next) { // NOTE: do not pass arrow function: https://stackoverflow.com/questions/37365038/this-is-undefined-in-a-mongoose-pre-save-hook
   if (!this.password) {
     console.log('backend/database/models/user.js - No password provided');
     next();
