@@ -2,75 +2,67 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 
-class Signup extends Component {
+class Login extends Component {
   constructor() {
     super();
     this.state = {
       username: '',
       password: '',
-      redirectTo: '',
+      redirectTo: null,
     };
-
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = (e) => {
+  handleChange = (event) => {
     this.setState({
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     });
   }
 
-  handleSubmit = (e) => {
-    console.log('client/src/components/signUp.js - handleSubmit, username: ');
-    console.log(this.state.username);
+  handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('client/src/components/login.js - handleSubmit');
 
-    e.preventDefault();
-
-    // Send a POST request to our backend server to add a new username & password
-    axios.post('/user/signup', {
-      username: this.state.username,
-      password: this.state.password,
-    })
-      .then((response) => {
-        console.log(response);
-
-        if (!response.data.error) { // If not getting `error` property in `response.data`
-          console.log('Successful signup');
-          this.setState({
-            // Set property to redirect to login page
-            redirectTo: '/login', // Note: This url is used in React router of our frontend
-          });
-        } else {
-          console.log('Username already taken, please take another one');
-        }
+    axios
+      .post('/user/login', {
+        username: this.state.username,
+        password: this.state.password,
       })
-      .catch((error) => {
-        console.log('Signup error: ');
+      .then((response) => {
+        console.log('client/src/components/login.js - login response: ');
+        console.log(response);
+        if (response.status === 200) {
+          // Update App.js state
+          this.props.updateUser({
+            loggedIn: true,
+            username: response.data.username,
+          });
+          // Update the state to redirect to home
+          this.setState({
+            redirectTo: '/',
+          });
+        }
+      }).catch((error) => {
+        console.log('client/src/components/login.js - login error: ');
         console.log(error);
       });
   }
 
   render() {
     if (this.state.redirectTo) {
-      /*
-        If redirect property is not null, redirect to login page 
-        (which is getting from `handleSubmit`)
-      */
       return <Redirect to={{ pathname: this.state.redirectTo }} />;
     }
-
     return (
-      <div className="SignupForm">
-        <h4>Sign up</h4>
+      <div>
+        <h4>Login</h4>
         <form className="form-horizontal">
           <div className="form-group">
             <div className="col-1 col-ml-auto">
               <label className="form-label" htmlFor="username">Username</label>
             </div>
             <div className="col-3 col-mr-auto">
-              <input
-                className="form-input"
+              <input className="form-input"
                 type="text"
                 id="username"
                 name="username"
@@ -85,8 +77,7 @@ class Signup extends Component {
               <label className="form-label" htmlFor="password">Password</label>
             </div>
             <div className="col-3 col-mr-auto">
-              <input
-                className="form-input"
+              <input className="form-input"
                 placeholder="password"
                 type="password"
                 name="password"
@@ -102,7 +93,7 @@ class Signup extends Component {
               onClick={this.handleSubmit}
               type="submit"
             >
-              Sign up
+                Login
             </button>
           </div>
         </form>
@@ -111,4 +102,4 @@ class Signup extends Component {
   }
 }
 
-export default Signup;
+export default Login;

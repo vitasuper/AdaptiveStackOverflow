@@ -68,3 +68,5 @@ const localStrategy = new LocalStrategy(
 );
 
 passport.use(localStrategy);
+
+module.exports = passport;

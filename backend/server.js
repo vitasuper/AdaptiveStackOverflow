@@ -10,10 +10,12 @@ const app = express();
 const PORT = 3001;
 
 const dbConnection = require('./database');
+const MongoStore = require('connect-mongo')(session)
+
 const passport = require('./passport');
 
-// Route requires
-const user = require('./routes/user');
+// Router requires
+const userRouter = require('./routers/userRouter');
 
 // Middleware
 app.use(morgan('dev'));
@@ -34,6 +36,7 @@ app.use(bodyParser.json());
 app.use(
   session({ // express-session
     secret: 'vitasuper', // pick a random string to make the hash that is generated secure
+    store: new MongoStore({ mongooseConnection: dbConnection }), // express-session can’t handle more than one user at a time, so connect-mongo stores session info in our database
     resave: false, // required
     saveUninitialized: false // required
   })
@@ -50,7 +53,7 @@ app.use(passport.session()); // calls serializeUser and deserializeUser
 
 
 // Routing
-app.use('/user', user); // use rules inside `user` as routing rules for url `/user`
+app.use('/user', userRouter); // use rules inside `user` as routing rules for url `/user`
 
 // Starting server
 app.listen(PORT, () => {
