@@ -9,6 +9,7 @@ class Login extends Component {
       username: '',
       password: '',
       redirectTo: null,
+      loginFail: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -40,12 +41,16 @@ class Login extends Component {
           });
           // Update the state to redirect to home
           this.setState({
+            loginFail: '',
             redirectTo: '/',
           });
         }
       }).catch((error) => {
         console.log('client/src/components/login.js - login error: ');
         console.log(error);
+        this.setState({
+          loginFail: 'true',
+        });
       });
   }
 
@@ -56,6 +61,13 @@ class Login extends Component {
     return (
       <div>
         <h4>Login</h4>
+        {this.state.loginFail && 
+        <div className="col-4 col-mx-auto">
+          <div className="toast toast-error">
+              Login fail. Please check your info.
+            </div>
+        </div>
+        }
         <form className="form-horizontal">
           <div className="form-group">
             <div className="col-1 col-ml-auto">
