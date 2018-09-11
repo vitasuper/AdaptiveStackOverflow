@@ -1,0 +1,117 @@
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
+import axios from 'axios';
+
+class Login extends Component {
+  constructor() {
+    super();
+    this.state = {
+      username: '',
+      password: '',
+      redirectTo: null,
+      loginFail: '',
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  }
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('client/src/components/login.js - handleSubmit');
+
+    axios
+      .post('/user/login', {
+        username: this.state.username,
+        password: this.state.password,
+      })
+      .then((response) => {
+        console.log('client/src/components/login.js - login response: ');
+        console.log(response);
+        if (response.status === 200) {
+          // Update App.js state
+          this.props.updateUser({
+            loggedIn: true,
+            username: response.data.username,
+          });
+          // Update the state to redirect to home
+          this.setState({
+            loginFail: '',
+            redirectTo: '/',
+          });
+        }
+      }).catch((error) => {
+        console.log('client/src/components/login.js - login error: ');
+        console.log(error);
+        this.setState({
+          loginFail: 'true',
+        });
+      });
+  }
+
+  render() {
+    if (this.state.redirectTo) {
+      return <Redirect to={{ pathname: this.state.redirectTo }} />;
+    }
+    return (
+      <div>
+        <h4>Login</h4>
+        {this.state.loginFail && 
+        <div className="col-4 col-mx-auto">
+          <div className="toast toast-error">
+              Login fail. Please check your info.
+            </div>
+        </div>
+        }
+        <form className="form-horizontal">
+          <div className="form-group">
+            <div className="col-1 col-ml-auto">
+              <label className="form-label" htmlFor="username">Username</label>
+            </div>
+            <div className="col-3 col-mr-auto">
+              <input className="form-input"
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Username"
+                value={this.state.username}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <div className="col-1 col-ml-auto">
+              <label className="form-label" htmlFor="password">Password</label>
+            </div>
+            <div className="col-3 col-mr-auto">
+              <input className="form-input"
+                placeholder="password"
+                type="password"
+                name="password"
+                value={this.state.password}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+          <div className="form-group ">
+            <div className="col-7" />
+            <button
+              className="btn btn-primary col-1 col-mr-auto"
+              onClick={this.handleSubmit}
+              type="submit"
+            >
+                Login
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
+}
+
+export default Login;
