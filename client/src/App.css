@@ -1,28 +1,45 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .App-header {
   background-color: #222;
-  height: 150px;
   padding: 20px;
-  color: white;
 }
 
-.App-title {
-  font-size: 1.5em;
+
+/* Login form and register form */
+
+.SignupForm, .LoginForm {
+  margin-top: 40px;
 }
 
-.App-intro {
-  font-size: large;
+h2 {
+  text-align: center;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+input[type=text], input[type=password] {
+  height: 60px;
+  padding: 20px;
+}
+
+#login-signup-button {
+  height: 60px;
+}
+
+/* stackoverflow content style below */
+
+.stackoverflow-content {
+  margin: 3em;
+}
+
+.statscontainer {
+  text-align: center;
+}
+
+.question-summary {
+	border-left: 5px solid #f48024;
+	margin: 20px;
+	padding: 10px;
+	background-color: #fcf8f1;
 }
