@@ -5,7 +5,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-const uri = 'mongodb://test:test123@ds149252.mlab.com:49252/adaptive-stackoverflow';
+const uri = 'mongodb://test:test123@ds259802.mlab.com:59802/adaptive-stackoverflow-2';
 
 mongoose.connect(uri)
   .then(
