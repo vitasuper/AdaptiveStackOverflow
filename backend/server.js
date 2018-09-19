@@ -17,6 +17,7 @@ const passport = require('./passport');
 // Router requires
 const userRouter = require('./routers/userRouter');
 const userProfileRouter = require('./routers/userProfileRouter');
+const userEventRouter = require('./routers/userEventRouter');
 
 // Middleware
 app.use(morgan('dev'));
@@ -54,8 +55,9 @@ app.use(passport.session()); // calls serializeUser and deserializeUser
 
 
 // Routing
-app.use('/user', userRouter); // use rules inside `user` as routing rules for url `/user`
-app.use('/userprofile', userProfileRouter); // use rules inside `user` as routing rules for url `/userprofile`
+app.use('/user', userRouter); // use rules inside `userRouter` as routing rules for url `/user`
+app.use('/userprofile', userProfileRouter); // use rules inside `userProfileRouter` as routing rules for url `/userprofile`
+app.use('/userevent/', userEventRouter); // use rules inside `userEventRouter` as routing rules for url `/userevent`
 
 // Starting server
 app.listen(PORT, () => {

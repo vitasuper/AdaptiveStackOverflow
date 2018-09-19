@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
 import { Route, Link } from 'react-router-dom';
 import { myAuth } from '../utils/privateRoute';
 import Moment from 'react-moment';
 import '../App.css';
 import axios from 'axios';
+import vmoment from 'moment';
 
 class Navbar extends Component {
   constructor() {
@@ -19,12 +19,30 @@ class Navbar extends Component {
       .then((response) => {
         console.log(response.data);
         if (response.status === 200) {
+
+          var startDate = vmoment(this.props.currentLoginTime, 'YYYY-MM-DD HH:mm:ss');
+          var endDate = vmoment(new Date(), 'YYYY-MM-DD HH:mm:ss');
+          var duration = vmoment.duration(endDate.diff(startDate));
+          var seconds = duration.asSeconds();
+          console.log("hey longyue!!!: " + seconds);
+
+          axios
+            .post('/userevent/' + this.props.username + '/types/userStaytimeEvent', { extraInfo: seconds.toString() })
+            .then((innerresponse) => {
+                console.log(innerresponse.data);
+            }).catch((error) => {
+                console.log('save error');
+            });
+
           this.props.updateUser({
             loggedIn: false,
             username: null,
-            lastLoginTime: ''
+            lastLoginTime: '',
+            currentLoginTime: '',
           });
         }
+        
+
       }).catch((error) => {
         console.log('Logout error');
       });
@@ -45,6 +63,7 @@ class Navbar extends Component {
                 <section className="navbar-section">
                   <a class="navbar-brand mr-2 text-gray">Adaptive StackOverflow</a>
                   <Link to="/home" className="btn btn-link text-light">Home</Link>
+                  <Link to="/vis" className="btn btn-link text-light">Visualization</Link>
                   <Link
                     to="#"
                     className="btn btn-link text-light"

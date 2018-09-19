@@ -16,11 +16,20 @@ class Home extends Component {
     // This binding is necessary to make `this` work in the callback
     this.handleClick = this.handleClick.bind(this);
     this.handleSelectedText = this.handleSelectedText.bind(this);
+    this.handleBookmark = this.handleBookmark.bind(this);
+    this.handleTitleClick = this.handleTitleClick.bind(this);
   }
 
   handleClick() {
     console.log("current user: " + this.state.username);
     console.log("The link is clicked");
+    axios
+        .get('/userevent/' + this.state.username + '/types')
+        .then((response) => {
+            console.log(response.data);
+        }).catch((error) => {
+            console.log('save error');
+        });
   }
 
   handleSelectedText() {
@@ -35,7 +44,42 @@ class Home extends Component {
 
     if (txt != '') {
       console.log(`Selected text is ${txt} and user is ${this.state.username}`);
+      axios
+        .post('/userevent/' + this.state.username + '/types/userSelectTextEvent', { extraInfo: txt.toString() })  // NOTE: toString is a must!
+        .then((response) => {
+            console.log("============Post select word event!=========");
+            console.log(response.data);
+        }).catch((error) => {
+            console.log('save error');
+        });
+        
     }
+  }
+
+  handleBookmark(e) {
+    e.preventDefault();
+
+    alert('Bookmark successfully!');
+
+    axios
+      .post('/userevent/' + this.state.username + '/types/userBookmarkEvent', { extraInfo: e.target.value.toString() })  // NOTE: toString is a must!
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.log('save error');
+      });
+  }
+
+  handleTitleClick() {
+    console.log('===title clicked===');
+
+    axios
+      .post('/userevent/' + this.state.username + '/types/userClickTitleEvent', { extraInfo: '' })
+      .then((response) => {
+          console.log(response.data);
+      }).catch((error) => {
+          console.log('save error');
+      });
   }
 
   render() {
@@ -69,7 +113,8 @@ class Home extends Component {
               </div>
             </div>
             <div className="summary col-10">
-              <h3><a  className="question-hyperlink text-dark">What is a raw type and why shouldn't we use it?</a></h3>
+              <h3><a  className="question-hyperlink text-dark" onClick={this.handleTitleClick} >What is a raw type and why shouldn't we use it?</a></h3>
+              <button className="btn btn-sm" value="What is a raw type and why shouldn't we use it?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                 {`
                   Questions:
@@ -118,7 +163,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">How do I compare strings in Java?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >How do I compare strings in Java?</a></h3>
+              <button className="btn btn-sm" value="How do I compare strings in Java?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`I've been using the == operator in my program to compare all my strings so far.
                   However, I ran into a bug, changed one of them into .equals() instead, and it fixed the bug.
@@ -162,7 +208,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">Is Java “pass-by-reference” or “pass-by-value”?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >Is Java “pass-by-reference” or “pass-by-value”?</a></h3>
+              <button className="btn btn-sm" value="Is Java “pass-by-reference” or “pass-by-value”?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`I always thought Java was pass-by-reference.
                   However, I've seen a couple of blog posts (for example, this blog) that claim that it isn't.
@@ -206,7 +253,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">How do I fix android.os.NetworkOnMainThreadException?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >How do I fix android.os.NetworkOnMainThreadException?</a></h3>
+              <button className="btn btn-sm" value="How do I fix android.os.NetworkOnMainThreadException?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`I got an error while running my Android project for RssReader. 
                   Code:
@@ -255,7 +303,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">The Use of Multiple JFrames: Good or Bad Practice? [closed]</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >The Use of Multiple JFrames: Good or Bad Practice? [closed]</a></h3>
+              <button className="btn btn-sm" value="The Use of Multiple JFrames: Good or Bad Practice? [closed]" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`I'm developing an application which displays images, and plays sounds from a database. I'm trying to decide whether or not to use a separate JFrame to add images to the database from the GUI. 
                   I'm ...`}
@@ -301,7 +350,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">Unfortunately MyApp has stopped. How can I solve this?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >Unfortunately MyApp has stopped. How can I solve this?</a></h3>
+              <button className="btn btn-sm" value="Unfortunately MyApp has stopped. How can I solve this?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`I am developing an application, and everytime I run it, I get the message:
                   Unfortunately, MyApp has stopped.
@@ -349,7 +399,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">What causes a java.lang.ArrayIndexOutOfBoundsException and how do I prevent it?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >What causes a java.lang.ArrayIndexOutOfBoundsException and how do I prevent it?</a></h3>
+              <button className="btn btn-sm" value="What causes a java.lang.ArrayIndexOutOfBoundsException and how do I prevent it?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`What does ArrayIndexOutOfBoundsException mean and how do I get rid of it? 
                   Here is a code sample that triggers the exception:
@@ -397,7 +448,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">Scanner is skipping nextLine() after using next() or nextFoo()?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >Scanner is skipping nextLine() after using next() or nextFoo()?</a></h3>
+              <button className="btn btn-sm" value="Scanner is skipping nextLine() after using next() or nextFoo()?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`I am using the Scanner methods nextInt() and nextLine() for reading input. 
                   It looks like this:
@@ -446,7 +498,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">How to add JTable in JPanel with null layout?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >How to add JTable in JPanel with null layout?</a></h3>
+              <button className="btn btn-sm" value="How to add JTable in JPanel with null layout?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   I want to add JTable into JPanel whose layout is null.  JPanel contains other components. I have to add JTable at proper position.
               </div>
@@ -491,7 +544,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">How to avoid Java code in JSP files?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >How to avoid Java code in JSP files?</a></h3>
+              <button className="btn btn-sm" value="How to avoid Java code in JSP files?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                  {`I'm new to Java EE and I know that something like the following three lines
                   &lt;%= x+1 %&gt;
@@ -540,7 +594,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">Should I avoid the use of set(Preferred|Maximum|Minimum)Size methods in Java Swing?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >Should I avoid the use of set(Preferred|Maximum|Minimum)Size methods in Java Swing?</a></h3>
+              <button className="btn btn-sm" value="Should I avoid the use of set(Preferred|Maximum|Minimum)Size methods in Java Swing?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`Several times I've been criticized for having suggested the use of the following methods:
                   setPreferredSize
@@ -589,7 +644,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">How do I write a correct micro-benchmark in Java?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >How do I write a correct micro-benchmark in Java?</a></h3>
+              <button className="btn btn-sm" value="How do I write a correct micro-benchmark in Java?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`How do you write (and run) a correct micro-benchmark in Java?
                   I'm looking here for code samples and comments illustrating various things to think about.
@@ -636,7 +692,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">What is a raw type and why shouldn't we use it?</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >What is a raw type and why shouldn't we use it?</a></h3>
+              <button className="btn btn-sm" value="What is a raw type and why shouldn't we use it?" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`Questions:
                   What are raw types in Java, and why do I often hear that they shouldn't be used in new code?
@@ -683,7 +740,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">Providing white space in a Swing GUI</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >Providing white space in a Swing GUI</a></h3>
+              <button className="btn btn-sm" value="Providing white space in a Swing GUI" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`A GUI with no white space appears 'crowded'.  How can I provide white space without resorting to explicitly setting the position or size of components?­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­­...`}
               </div>
@@ -728,7 +786,8 @@ class Home extends Component {
               </div>
             </div>
             <div class="summary col-10">
-              <h3><a  class="question-hyperlink text-dark">How to parse JSON in Java</a></h3>
+              <h3><a  class="question-hyperlink text-dark" onClick={this.handleTitleClick} >How to parse JSON in Java</a></h3>
+              <button className="btn btn-sm" value="How to parse JSON in Java" onClick={this.handleBookmark}>Click to bookmark this question</button>
               <div className="excerpt" onMouseUp={this.handleSelectedText}>
                   {`I have the following JSON text. How can I parse it to get pageName, pagePic, post_id, etc.?
                   {
