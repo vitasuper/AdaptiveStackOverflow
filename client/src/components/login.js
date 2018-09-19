@@ -52,6 +52,7 @@ class Login extends Component {
                 loggedIn: true,
                 username: response.data.username,
                 lastLoginTime: innerresponse.data.lastLoginTime,  // Get last login time from here
+                currentLoginTime: new Date(),
               });
 
               // Update the state to redirect to home
@@ -80,7 +81,7 @@ class Login extends Component {
       <div className="LoginForm">
         <h2 className="col-4 col-mx-auto">LOGIN</h2>
         {this.state.loginFail && 
-        <div className="col-4 col-mx-auto">
+        <div className="col-3 col-mx-auto">
           <div className="toast toast-error">
               Login fail. Please check your info.
             </div>
