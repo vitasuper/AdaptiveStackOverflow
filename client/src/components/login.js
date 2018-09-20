@@ -61,6 +61,16 @@ class Login extends Component {
                 loginFail: '',
               });
             });
+          
+          // in order to set initial userevent for this user
+          axios
+            .post('/userevent/' + response.data.username + '/types/userLoginEvent')
+            .then((innerresponse) => {
+              console.log(innerresponse);
+            }).catch((error) => {
+              console.log(error);
+            });
+          
         }
       }).catch((error) => {
         console.log('client/src/components/login.js - login error: ');
