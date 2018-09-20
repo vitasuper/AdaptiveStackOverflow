@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import { myAuth } from '../utils/privateRoute';
 
 class Login extends Component {
   constructor() {
@@ -8,23 +9,28 @@ class Login extends Component {
     this.state = {
       username: '',
       password: '',
-      redirectTo: null,
+      redirectToReferrer: false,
       loginFail: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange = (event) => {
+  handleChange(event) {
     this.setState({
       [event.target.name]: event.target.value,
     });
   }
 
-  handleSubmit = (event) => {
+  handleSubmit(event) {
     event.preventDefault();
     console.log('client/src/components/login.js - handleSubmit');
 
+    const self = this;
+
+    /*
+      Get basic information and get user profile inside this POST request
+    */
     axios
       .post('/user/login', {
         username: this.state.username,
@@ -34,16 +40,37 @@ class Login extends Component {
         console.log('client/src/components/login.js - login response: ');
         console.log(response);
         if (response.status === 200) {
-          // Update App.js state
-          this.props.updateUser({
-            loggedIn: true,
-            username: response.data.username,
-          });
-          // Update the state to redirect to home
-          this.setState({
-            loginFail: '',
-            redirectTo: '/',
-          });
+          myAuth.authenticate();
+          // Get user profile here
+          axios
+            .post('/userprofile/' + response.data.username)
+            .then((innerresponse) => {
+              /*
+                Update App.js so we can re-render our components in App
+              */
+              self.props.updateUser({
+                loggedIn: true,
+                username: response.data.username,
+                lastLoginTime: innerresponse.data.lastLoginTime,  // Get last login time from here
+                currentLoginTime: new Date(),
+              });
+
+              // Update the state to redirect to home
+              self.setState({
+                redirectToReferrer: true,
+                loginFail: '',
+              });
+            });
+          
+          // in order to set initial userevent for this user
+          axios
+            .post('/userevent/' + response.data.username + '/types/userLoginEvent')
+            .then((innerresponse) => {
+              console.log(innerresponse);
+            }).catch((error) => {
+              console.log(error);
+            });
+          
         }
       }).catch((error) => {
         console.log('client/src/components/login.js - login error: ');
@@ -55,14 +82,16 @@ class Login extends Component {
   }
 
   render() {
-    if (this.state.redirectTo) {
-      return <Redirect to={{ pathname: this.state.redirectTo }} />;
+    const { redirectToReferrer } = this.state;
+    if (redirectToReferrer) {
+      console.log('============TRYING TO REDIRECT TO HOME==========');
+      return <Redirect to="/home" />;
     }
     return (
-      <div>
-        <h4>Login</h4>
+      <div className="LoginForm">
+        <h2 className="col-4 col-mx-auto">LOGIN</h2>
         {this.state.loginFail && 
-        <div className="col-4 col-mx-auto">
+        <div className="col-3 col-mx-auto">
           <div className="toast toast-error">
               Login fail. Please check your info.
             </div>
@@ -70,10 +99,7 @@ class Login extends Component {
         }
         <form className="form-horizontal">
           <div className="form-group">
-            <div className="col-1 col-ml-auto">
-              <label className="form-label" htmlFor="username">Username</label>
-            </div>
-            <div className="col-3 col-mr-auto">
+            <div className="col-3 col-mx-auto">
               <input className="form-input"
                 type="text"
                 id="username"
@@ -85,12 +111,9 @@ class Login extends Component {
             </div>
           </div>
           <div className="form-group">
-            <div className="col-1 col-ml-auto">
-              <label className="form-label" htmlFor="password">Password</label>
-            </div>
-            <div className="col-3 col-mr-auto">
+            <div className="col-3 col-mx-auto">
               <input className="form-input"
-                placeholder="password"
+                placeholder="Password"
                 type="password"
                 name="password"
                 value={this.state.password}
@@ -99,13 +122,13 @@ class Login extends Component {
             </div>
           </div>
           <div className="form-group ">
-            <div className="col-7" />
             <button
-              className="btn btn-primary col-1 col-mr-auto"
+              className="btn btn-primary col-3 col-mx-auto"
+              id="login-signup-button"
               onClick={this.handleSubmit}
               type="submit"
             >
-                Login
+                LOGIN
             </button>
           </div>
         </form>
