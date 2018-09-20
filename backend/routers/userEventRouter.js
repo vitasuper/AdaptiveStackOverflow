@@ -104,7 +104,7 @@ router.get('/:username/types', (req, res) => {
       // console.log("print object detail" + JSON.stringify(parseClickAndBookmarkTimestampsToLineData(clickTitleTimestamps, bookmarkTimestamps), null, 4));
       res.json({
         wordCloudData: parseWordListToWordCloudData(wordsListStr),
-        avarageStayTime: averageStayTime,
+        averageStayTime: averageStayTime,
         loginCnt: loginCnt,
         calendarData: parseLoginTimestampsToCalendarData(loginTimestamps),
         dailyData: parseLoginTimestampsToDailyData(loginTimestamps),
@@ -128,7 +128,7 @@ router.get('/:username/types', (req, res) => {
   ]
 */
 function parseWordListToWordCloudData(wordListStr) {
-  var common = "just,really,poop,i,me,my,myself,we,us,our,ours,ourselves,you,your,yours,yourself,yourselves,he,him,his,himself,she,her,hers,herself,it,its,itself,they,them,their,theirs,themselves,what,which,who,whom,whose,this,that,these,those,am,is,are,was,were,be,been,being,have,has,had,having,do,does,did,doing,will,would,should,can,could,ought,i'm,you're,he's,she's,it's,we're,they're,i've,you've,we've,they've,i'd,you'd,he'd,she'd,we'd,they'd,i'll,you'll,he'll,she'll,we'll,they'll,isn't,aren't,wasn't,weren't,hasn't,haven't,hadn't,doesn't,don't,didn't,won't,wouldn't,shan't,shouldn't,can't,cannot,couldn't,mustn't,let's,that's,who's,what's,here's,there's,when's,where's,why's,how's,a,an,the,and,but,if,or,because,as,until,while,of,at,by,for,with,about,against,between,into,through,during,before,after,above,below,to,from,up,upon,down,in,out,on,off,over,under,again,further,then,once,here,there,when,where,why,how,all,any,both,each,few,more,most,other,some,such,no,nor,not,only,own,same,so,than,too,very,say,says,said,shall";
+  var common = "What,However,just,really,poop,i,me,my,myself,we,us,our,ours,ourselves,you,your,yours,yourself,yourselves,he,him,his,himself,she,her,hers,herself,it,its,itself,they,them,their,theirs,themselves,what,which,who,whom,whose,this,that,these,those,am,is,are,was,were,be,been,being,have,has,had,having,do,does,did,doing,will,would,should,can,could,ought,i'm,you're,he's,she's,it's,we're,they're,i've,you've,we've,they've,i'd,you'd,he'd,she'd,we'd,they'd,i'll,you'll,he'll,she'll,we'll,they'll,isn't,aren't,wasn't,weren't,hasn't,haven't,hadn't,doesn't,don't,didn't,won't,wouldn't,shan't,shouldn't,can't,cannot,couldn't,mustn't,let's,that's,who's,what's,here's,there's,when's,where's,why's,how's,a,an,the,and,but,if,or,because,as,until,while,of,at,by,for,with,about,against,between,into,through,during,before,after,above,below,to,from,up,upon,down,in,out,on,off,over,under,again,further,then,once,here,there,when,where,why,how,all,any,both,each,few,more,most,other,some,such,no,nor,not,only,own,same,so,than,too,very,say,says,said,shall";
 
   var wordCount = {};
   var words = wordListStr.split(/[ '\-\(\)\*":;\[\]|{},.!?]+/);
@@ -219,22 +219,17 @@ function parseLoginTimestampsToDailyData(loginTimestamps) {
   let dateCnt = {};
   let morningCnt = 0, afternoonCnt = 0, eveningCnt = 0;
 
+  var minutesOfDay = function(m) {
+    return m.minutes() + m.hours() * 60;
+  }
+
   for (let i = 0; i < loginTimestamps.length; ++i) {
-    var format = 'hh:mm:ss';
     var local = moment(loginTimestamps[i]).local();
-
-    local = moment(local, format);
-
-    var morningStartTime = moment('00:00:00', format);
-    var morningEndTime = moment('12:00:00', format);
-    var afternoonStartTime = moment('12:00:01', format);
-    var afternoonEndTime = moment('18:00:00', format);
-    var eveningStartTime = moment('18:00:01', format);
-    var eveningEndTime = moment('23:59:59', format);
+    var localMins = minutesOfDay(moment(local));
     
-    if (local.isBetween(morningStartTime, morningEndTime)) {
+    if (localMins >= 0 && localMins < 720) {
       morningCnt += 1;
-    } else if (local.isBetween(afternoonStartTime, afternoonEndTime)) {
+    } else if (localMins >= 720 && localMins < 1080) {
       afternoonCnt += 1;
     } else {
       eveningCnt += 1;
