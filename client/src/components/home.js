@@ -89,9 +89,8 @@ class Home extends Component {
 
     return (
       <div className="stackoverflow-content">
-        <div>
-          <p onClick={this.handleClick}>It's <b>good</b> to be home</p>
-          <img style={imageStyle} src="https://i.ytimg.com/vi/N1icEHtgb3g/maxresdefault.jpg" />
+        <div className="footnote">
+          [Please click the title, or click the bookmark button, or select/highlight the word from the question excerpt in this page, and then go to Visualization page to see the result]
         </div>
 
         <div className="question-summary columns" id="question-summary-2770321">
