@@ -144,3 +144,9 @@ input[type=text], input[type=password] {
 .footnote span {
   font-weight: 300;
 }
+
+.loginInfo {
+  font-size: 12pt;
+  font-weight: 100;
+  text-align: center;
+}

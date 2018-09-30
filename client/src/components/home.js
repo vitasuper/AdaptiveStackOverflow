@@ -71,6 +71,7 @@ class Home extends Component {
   }
 
   handleTitleClick() {
+    alert('You have clicked a title!');
     console.log('===title clicked===');
 
     axios

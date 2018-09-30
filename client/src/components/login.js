@@ -132,6 +132,8 @@ class Login extends Component {
             </button>
           </div>
         </form>
+
+        <div className="col-4 col-mx-auto loginInfo" >Use this account for testing purpose: username - <b>aaa</b> / password - <b>123</b></div>
       </div>
     );
   }
