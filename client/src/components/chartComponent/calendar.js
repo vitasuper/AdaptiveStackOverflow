@@ -14,7 +14,7 @@ class MyCalendar extends Component {
           left: 50
         }}
         from="2018-01-01T07:00:00.000Z"
-        to="2018-12-31T07:00:00.000Z"
+        to="2019-12-30T07:00:00.000Z"
         data={this.props.data}
       />
     );

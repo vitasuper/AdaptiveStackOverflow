@@ -184,12 +184,12 @@ class Vis extends Component {
     return (
       <div>
         <div className="intro-text col-6 col-mx-auto">
-          Hi {this.state.username}, in 2018 you visited StackOverflow for <span>{this.state.loginCnt}</span> times. The calendar showing your visit times for each day is as follows:
+          Hi {this.state.username}, in 2018-2019 you visited StackOverflow for <span>{this.state.loginCnt}</span> times. The calendar showing your visit times for each day is as follows:
         </div>
         <div className="intro-text-minor col-6 col-mx-auto">
           Your average stay time is <span>{stayTime}</span>. Thanks for staying with us!
         </div>
-        <div className="col-8 col-mx-auto chart">
+        <div className="col-4 col-mx-auto chart">
           <MyCalendar data={this.state.calendarData} />
         </div>
 
